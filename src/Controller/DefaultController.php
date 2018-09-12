@@ -66,7 +66,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/clone/{barId}", name="create", methods={"GET"})
+     * @Route("/clone/{barId}", name="clone", methods={"GET"})
      *
      * @param BarRepository $barRepository
      * @param               $barId
