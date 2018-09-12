@@ -79,4 +79,11 @@ class Bar
 
         return $this;
     }
+
+    public function addFoo(Foo $foo): self
+    {
+        $this->foos->add($foo);
+
+        return $this;
+    }
 }

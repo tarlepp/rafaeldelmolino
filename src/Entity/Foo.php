@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\FooRepository")
+ * @ORM\Entity(repositoryClass="BarRepository")
  */
 class Foo
 {
