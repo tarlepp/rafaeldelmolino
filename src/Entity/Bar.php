@@ -28,6 +28,11 @@ class Bar
      */
     private $foos;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $clonedFrom = null;
+
     public function __construct()
     {
         $this->foos = new ArrayCollection();
@@ -36,6 +41,7 @@ class Bar
     public function __clone()
     {
         if ($this->id) {
+            $this->setClonedFrom($this->id);
             $this->id = null;
 
             $foosClone = new ArrayCollection();
@@ -83,6 +89,26 @@ class Bar
     public function addFoo(Foo $foo): self
     {
         $this->foos->add($foo);
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClonedFrom(): ?int
+    {
+        return $this->clonedFrom;
+    }
+
+    /**
+     * @param mixed $clonedFrom
+     *
+     * @return \App\Entity\Bar
+     */
+    public function setClonedFrom(?int $clonedFrom): self
+    {
+        $this->clonedFrom = $clonedFrom;
 
         return $this;
     }

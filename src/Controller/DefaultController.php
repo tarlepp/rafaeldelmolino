@@ -37,13 +37,16 @@ class DefaultController extends AbstractController
     /**
      * @Route("/create", name="create", methods={"GET"})
      *
+     * @param \App\Repository\BarRepository $barRepository
+     *
      * @return RedirectResponse
      *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Exception
      */
-    public function createDummyData()
+    public function createDummyData(BarRepository $barRepository): RedirectResponse
     {
-        $em = $this->getDoctrine()->getManager();
         $faker = \Faker\Factory::create();
 
         $bar = (new Bar())->setName($faker->name);
@@ -54,11 +57,10 @@ class DefaultController extends AbstractController
             $foo = (new Foo())->setName($faker->name)->setBar($bar);
 
             $bar->addFoo($foo);
-            $em->persist($foo);
+            $barRepository->store($foo);
         }
 
-        $em->persist($bar);
-        $em->flush();
+        $barRepository->store($bar, true);
 
         return new RedirectResponse($this->generateUrl('default'));
     }
@@ -70,21 +72,22 @@ class DefaultController extends AbstractController
      * @param               $barId
      *
      * @return RedirectResponse
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function cloneData(BarRepository $barRepository, $barId): RedirectResponse
     {
         $entity = $barRepository->find($barId);
 
         if ($entity !== null) {
-            $em = $this->getDoctrine()->getManager();
-
             $newEntity = clone $entity;
 
-            $em->persist($newEntity);
+            $barRepository->store($newEntity);
 
-            $newEntity->getFoos()->map(function (Foo $foo) use ($em) { $em->persist($foo); });
+            $newEntity->getFoos()->map(function (Foo $foo) use ($barRepository) { $barRepository->store($foo); });
 
-            $em->flush();
+            $barRepository->store(null, true);
         }
 
         return new RedirectResponse($this->generateUrl('default'));

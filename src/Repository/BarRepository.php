@@ -19,6 +19,30 @@ class BarRepository extends ServiceEntityRepository
         parent::__construct($registry, Bar::class);
     }
 
+    /**
+     * @param           $entity
+     * @param bool|null $flush
+     *
+     * @return BarRepository
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function store($entity = null, bool $flush = null): self
+    {
+        $flush = $flush ?? false;
+
+        if ($entity !== null) {
+            $this->_em->persist($entity);
+        }
+
+        if ($flush) {
+            $this->_em->flush();
+        }
+
+        return $this;
+    }
+
 //    /**
 //     * @return Bar[] Returns an array of Bar objects
 //     */

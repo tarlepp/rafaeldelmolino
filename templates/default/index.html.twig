@@ -14,7 +14,11 @@
     Current <em>bar</em> entities:
     <ul>
         {% for bar in items %}
-            <li>ID: {{ bar.id }} - {{ bar.name }} <a href="clone/{{ bar.id }}">clone this</a><br />This contains following <em>foo</em> entities
+            <li>ID: {{ bar.id }} - {{ bar.name }} <a href="clone/{{ bar.id }}">clone this</a>
+                {% if bar.clonedFrom %}
+                    <br />Cloned from ID: {{ bar.clonedFrom }}
+                {% endif %}
+                <br />This contains following <em>foo</em> entities
                 <ul>
                     {% for foo in bar.foos %}
                         <li>ID: {{ foo.id }} - {{ foo.name }}</li>
